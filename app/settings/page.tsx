@@ -152,7 +152,9 @@ export default function SettingsPage() {
         selectedId="1"
         onSelectConversation={() => {}}
         onNewChat={handleNewChat}
+        onDeleteConversation={() => {}}
         userEmail={userEmail || undefined}
+        avatarUrl={avatarUrl || undefined}
       />
 
       {/* Main Content */}

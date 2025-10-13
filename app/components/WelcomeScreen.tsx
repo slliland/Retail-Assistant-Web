@@ -38,7 +38,7 @@ export default function WelcomeScreen({ onLogin, onSignUp }: WelcomeScreenProps)
   // Google login handler
   const handleGoogleLogin = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true); 
       setError(null);
       await signInWithGoogle();
     } catch (err: any) {

@@ -112,3 +112,113 @@ export const getCurrentUser = async () => {
   return user
 }
 
+// Create or update user profile (only called once from ChatInterface)
+export const createOrUpdateProfile = async (user: any) => {
+  if (!supabase || !user) {
+    return null
+  }
+
+  try {
+    // First, try to find existing profile by user_id
+    const { data: existingProfiles, error: selectError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('user_id', user.id)
+
+    if (selectError) {
+      console.error('Error checking for existing profiles:', selectError)
+      return null
+    }
+
+    // If profile(s) exist, update the first one and delete any duplicates
+    if (existingProfiles && existingProfiles.length > 0) {
+      const profileToKeep = existingProfiles[0]
+      
+      // Delete any duplicate profiles (keep only the first one)
+      if (existingProfiles.length > 1) {
+        const duplicateIds = existingProfiles.slice(1).map(p => p.id)
+        const { error: deleteError } = await supabase
+          .from('profiles')
+          .delete()
+          .in('id', duplicateIds)
+        
+        if (deleteError) {
+          console.error('Error deleting duplicate profiles:', deleteError)
+        } else {
+          console.log(`🗑️ Deleted ${duplicateIds.length} duplicate profiles`)
+        }
+      }
+
+      // Update the profile we're keeping
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({
+          username: user.user_metadata?.full_name || user.user_metadata?.name || user.email,
+          avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', profileToKeep.id)
+        .select()
+        .single()
+
+      if (error) {
+        console.error('Error updating profile:', error)
+        return null
+      }
+
+      console.log('✅ Profile updated:', data)
+      return data
+    } 
+    // If no profile exists, create a new one
+    else {
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert({
+          user_id: user.id,
+          username: user.user_metadata?.full_name || user.user_metadata?.name || user.email,
+          avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single()
+
+      if (error) {
+        console.error('Error creating profile:', error)
+        return null
+      }
+
+      console.log('✅ Profile created:', data)
+      return data
+    }
+  } catch (error) {
+    console.error('Error in createOrUpdateProfile:', error)
+    return null
+  }
+}
+
+// Get user profile
+export const getUserProfile = async (userId: string) => {
+  if (!supabase) {
+    return null
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .single()
+
+    if (error) {
+      console.error('Error fetching profile:', error)
+      return null
+    }
+
+    return data
+  } catch (error) {
+    console.error('Error in getUserProfile:', error)
+    return null
+  }
+}
+

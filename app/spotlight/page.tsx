@@ -55,7 +55,9 @@ export default function SpotlightPage() {
         selectedId="1"
         onSelectConversation={() => {}}
         onNewChat={handleNewChat}
+        onDeleteConversation={() => {}}
         userEmail={userEmail || undefined}
+        avatarUrl={avatarUrl || undefined}
       />
 
       <div className="pt-16 h-full overflow-y-auto">

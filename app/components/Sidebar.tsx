@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, MessageSquare, X, User, Settings } from "lucide-react";
+import { Plus, MessageSquare, X, User, Settings, Trash2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Conversation {
   id: string;
@@ -17,6 +18,7 @@ interface SidebarProps {
   selectedId: string | null;
   onSelectConversation: (id: string) => void;
   onNewChat: () => void;
+  onDeleteConversation: (id: string) => void;
   userEmail?: string;
   avatarUrl?: string;
 }
@@ -28,6 +30,7 @@ export default function Sidebar({
   selectedId,
   onSelectConversation,
   onNewChat,
+  onDeleteConversation,
   userEmail,
   avatarUrl,
 }: SidebarProps) {
@@ -43,7 +46,7 @@ export default function Sidebar({
 
       {/* Sidebar Drawer */}
       <div
-        className={`fixed top-0 left-0 bottom-0 w-64 z-50 transition-transform duration-300 ${
+        className={`fixed top-0 left-0 bottom-0 w-80 z-50 transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -113,24 +116,40 @@ export default function Sidebar({
 
               {/* Conversation List */}
               {conversations.map((conv) => (
-                <button
+                <div
                   key={conv.id}
-                  onClick={() => {
-                    onSelectConversation(conv.id);
-                    onClose();
-                  }}
-                  className={`w-full flex items-start gap-3 px-4 py-3.5 text-left rounded-xl transition-all ${
+                  className={`group relative w-full flex items-start gap-3 px-4 py-3.5 text-left rounded-xl transition-all ${
                     selectedId === conv.id
                       ? "bg-white/25 backdrop-blur-md"
                       : "bg-white/10 backdrop-blur-md hover:bg-white/15"
                   }`}
                 >
-                  <MessageSquare className="w-5 h-5 text-white mt-0.5" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white font-caslon font-medium truncate">{conv.title}</p>
-                    <p className="text-white/60 font-caslon text-xs">{conv.timestamp}</p>
-                  </div>
-                </button>
+                  <button
+                    onClick={() => {
+                      onSelectConversation(conv.id);
+                      onClose();
+                    }}
+                    className="flex items-start gap-3 flex-1 min-w-0"
+                  >
+                    <MessageSquare className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-caslon font-medium truncate">{conv.title}</p>
+                      <p className="text-white/60 font-caslon text-xs">{conv.timestamp}</p>
+                    </div>
+                  </button>
+                  
+                  {/* Delete Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteConversation(conv.id);
+                    }}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 text-white/60 hover:text-white hover:bg-white/20 rounded-lg"
+                    title="Delete conversation"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               ))}
 
               {conversations.length === 0 && (
@@ -142,16 +161,19 @@ export default function Sidebar({
             </div>
           </div>
 
-          {/* Settings/Profile Section */}
+          {/* Settings Section */}
           <div className="px-4 pt-4 border-t border-white/10">
-            <button className="w-full flex items-center gap-3 px-4 py-3 text-white bg-white/10 backdrop-blur-md rounded-xl hover:bg-white/15 transition-all">
-              <Settings className="w-5 h-5" />
-              <span>Settings</span>
-            </button>
+            <Link href="/settings">
+              <button className="w-full flex items-center gap-3 px-4 py-3 text-white bg-white/10 backdrop-blur-md rounded-xl hover:bg-white/15 transition-all">
+                <Settings className="w-5 h-5" />
+                <span className="font-caslon font-medium">Settings</span>
+              </button>
+            </Link>
           </div>
         </div>
       </div>
     </>
   );
 }
+
 

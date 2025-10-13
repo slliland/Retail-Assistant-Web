@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, FileText, TrendingUp, Settings, Menu, User, LogOut, ChevronDown } from "lucide-react";
+import { MessageSquare, FileText, TrendingUp, Settings, Menu, User, LogOut, ChevronDown, MapPin } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -47,6 +47,7 @@ export default function TopNav({ onMenuClick, userEmail, avatarUrl }: TopNavProp
     { href: "/chat", label: "Chat", icon: MessageSquare },
     { href: "/reports", label: "Reports", icon: FileText },
     { href: "/spotlight", label: "Spotlight", icon: TrendingUp },
+    { href: "/stores", label: "Stores", icon: MapPin },
     { href: "/settings", label: "Settings", icon: Settings },
   ];
 
@@ -70,7 +71,7 @@ export default function TopNav({ onMenuClick, userEmail, avatarUrl }: TopNavProp
         </div>
 
         <div className="absolute left-1/2 transform -translate-x-1/2">
-          <div className="hidden md:flex items-center gap-2 bg-gray-100/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full px-2 py-2 shadow-sm">
+          <div className="flex items-center gap-1 bg-gray-100/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full px-1 py-1 shadow-sm">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -79,14 +80,15 @@ export default function TopNav({ onMenuClick, userEmail, avatarUrl }: TopNavProp
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full font-caslon text-sm transition-all ${
+                  className={`flex items-center gap-1 px-2 py-2 rounded-full font-caslon text-xs transition-all ${
                     isActive
                       ? "bg-black text-white dark:bg-white dark:text-black shadow-md"
                       : "text-gray-700 dark:text-gray-300 hover:bg-white/60 dark:hover:bg-slate-700/60"
                   }`}
+                  title={item.label}
                 >
-                  <Icon className="w-4 h-4" />
-                  {item.label}
+                  <Icon className="w-3 h-3" />
+                  <span className="hidden sm:block">{item.label}</span>
                 </Link>
               );
             })}
