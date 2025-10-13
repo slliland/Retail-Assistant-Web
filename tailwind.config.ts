@@ -18,7 +18,7 @@ const config: Config = {
       },
       fontFamily: {
         'zapfino': ['Zapfino', 'cursive'],
-        'caslon': ['BigCaslon', 'serif'],
+        'caslon': ['BigCaslon', 'Playfair Display', 'Georgia', 'serif'],
       },
       transitionDuration: {
         '400': '400ms',
