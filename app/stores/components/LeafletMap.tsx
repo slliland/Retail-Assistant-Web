@@ -3,7 +3,7 @@
 import React, { forwardRef, useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import type { StoreLocation, MapMode } from '../types';
-import type { FeatureCollection } from 'geojson';
+import type { FeatureCollection, Feature } from 'geojson';
 
 // Lazy load Leaflet components only on client side
 let MapContainer: any;
@@ -103,7 +103,7 @@ export const LeafletMap: React.FC<LeafletMapProps> = (props) => {
         <GeoJSON
           data={usStatesData}
           interactive={false}
-          style={(feature) => {
+          style={(feature: Feature) => {
             if (!feature) {
               return { fillColor: 'transparent', fillOpacity: 0, color: 'transparent', weight: 0, opacity: 0 };
             }
