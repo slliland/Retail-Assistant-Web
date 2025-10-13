@@ -19,6 +19,11 @@ export interface ChatMessage {
 // Create a new chat session
 export async function createChatSession(userId: string, title: string = 'New Chat'): Promise<string | null> {
   try {
+    if (!supabase) {
+      console.error('❌ Supabase client not initialized');
+      return null;
+    }
+    
     console.log('🔧 Creating session for user:', userId);
     
     const { data, error } = await supabase
@@ -43,6 +48,11 @@ export async function createChatSession(userId: string, title: string = 'New Cha
 // Get all sessions for a user
 export async function getUserSessions(userId: string): Promise<ChatSession[]> {
   try {
+    if (!supabase) {
+      console.error('❌ Supabase client not initialized');
+      return [];
+    }
+    
     console.log('🔍 Fetching sessions for user:', userId);
     
     const { data, error } = await supabase
@@ -67,6 +77,11 @@ export async function getUserSessions(userId: string): Promise<ChatSession[]> {
 // Get messages for a session
 export async function getSessionMessages(sessionId: string): Promise<ChatMessage[]> {
   try {
+    if (!supabase) {
+      console.error('❌ Supabase client not initialized');
+      return [];
+    }
+    
     console.log('🔍 getSessionMessages: Fetching messages for session:', sessionId);
     console.log('🔍 getSessionMessages: Session ID type:', typeof sessionId);
     console.log('🔍 getSessionMessages: Session ID length:', sessionId?.length);
@@ -123,6 +138,11 @@ export async function saveMessage(
   sources?: string[]
 ): Promise<boolean> {
   try {
+    if (!supabase) {
+      console.error('❌ Supabase client not initialized');
+      return false;
+    }
+    
     console.log('💾 saveMessage: Saving message with sources:', sources);
     
     const messageData: any = {
@@ -156,6 +176,11 @@ export async function saveMessage(
 // Update session title
 export async function updateSessionTitle(sessionId: string, title: string): Promise<boolean> {
   try {
+    if (!supabase) {
+      console.error('❌ Supabase client not initialized');
+      return false;
+    }
+    
     const { error } = await supabase
       .from('sessions')
       .update({ title: title })
@@ -176,6 +201,11 @@ export async function updateSessionTitle(sessionId: string, title: string): Prom
 // Delete a session and all its messages
 export async function deleteSession(sessionId: string): Promise<boolean> {
   try {
+    if (!supabase) {
+      console.error('❌ Supabase client not initialized');
+      return false;
+    }
+    
     // First delete all messages
     const { error: messagesError } = await supabase
       .from('messages')
