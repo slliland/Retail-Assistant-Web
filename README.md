@@ -1,6 +1,8 @@
 # Retail Assistant Web Application
 
-A modern web application for retail analytics and insights, providing AI-powered assistance for retail businesses.
+A web application for retail analytics and insights, providing AI-powered assistance for retail businesses.
+
+**Live Demo**: [https://retail-assistant-web.vercel.app](https://vercel.com/sllilands-projects/retail-assistant-web)
 
 ## Overview
 
